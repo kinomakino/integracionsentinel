@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspace": {
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2024-01-01-preview",
+      "id": "[concat(resourceId('Microsoft.OperationalInsights/workspaces/providers', parameters('workspace'), 'Microsoft.SecurityInsights'),'/alertRules/c2da1106-bfe4-4a63-bf14-5ab73130ccd5')]",
+      "kind": "Scheduled",
+      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/c2da1106-bfe4-4a63-bf14-5ab73130ccd5')]",
+      "properties": {
+        "alertRuleTemplateName": "c2da1106-bfe4-4a63-bf14-5ab73130ccd5",
+        "customDetails": null,
+        "description": "'Identifies if an AV scan fails in Azure App Services.'\n",
+        "displayName": "AppServices AV Scan Failure",
+        "enabled": true,
+        "entityMappings": [
+          {
+            "entityType": "Host",
+            "fieldMappings": [
+              {
+                "columnName": "_ResourceId",
+                "identifier": "AzureID"
+              }
+            ]
+          }
+        ],
+        "query": "let timeframe = ago(1d);\nAppServiceAntivirusScanAuditLogs\n| where ScanStatus == \"Failed\"\n| extend timestamp = TimeGenerated\n",
+        "queryFrequency": "P1D",
+        "queryPeriod": "P1D",
+        "severity": "Informational",
+        "subTechniques": [],
+        "suppressionDuration": "PT1H",
+        "suppressionEnabled": false,
+        "templateVersion": "1.0.3",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 1
+      },
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules"
+    }
+  ]
+}
